@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,12 +12,16 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private bool isGrounded;
-    private Animator pAni;   
+    private Animator pAni;
+
+    float score;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         pAni = GetComponent<Animator>();
+
+        score = 1000f;
     }
 
     private void Update()
@@ -43,7 +48,7 @@ public class PlayerController : MonoBehaviour
             pAni.SetTrigger("PlayerAction");
         }
 
-
+        score -= Time.deltaTime;
 
 
     }
@@ -57,6 +62,8 @@ public class PlayerController : MonoBehaviour
 
         if (collision.CompareTag("Finish"))
         {
+            HighScore.TrySet(SceneManager.GetActiveScene().buildIndex, (int)score);
+
             collision.GetComponent<LevelObject>().MoveToNextLevel();
         }
 
